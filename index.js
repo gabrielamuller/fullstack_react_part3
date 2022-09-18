@@ -24,6 +24,8 @@ let persons = [
 	  }
   ]
 
+  app.use(express.json())
+
   app.get('/', (request, response) => {
 	response.send('<h1>Hello World!</h1>')
   })
@@ -32,6 +34,7 @@ let persons = [
 	response.json(persons)
   })
 
+  // Info page
   app.get('/info', (request, response) => {
 	response.send(
 	  `<p>Phonebook has info for  ${persons.length}  people </p>
@@ -39,6 +42,7 @@ let persons = [
 	)
   })
 
+  // Single person
   app.get('/api/persons/:id', (request, response) => {
 	const id = Number(request.params.id)
 	const person = persons.find(person => person.id === id)
@@ -50,11 +54,37 @@ let persons = [
 	  }
   })
 
+  // Delete persons
   app.delete('/api/persons/:id', (request, response) => {
 	const id = Number(request.params.id)
 	persons = persons.filter(person => person.id !== id)
 
 	response.status(204).end()
+  })
+
+  // Add persons
+  const generateId = () => {
+	return Math.floor(Math.random() * 10000)
+  }
+
+  app.post('/api/persons', (request, response) => {
+	const body = request.body
+
+	if (!body.name) {
+	  return response.status(400).json({
+		error: 'content missing'
+	  })
+	}
+
+	const person = {
+	  id: generateId(),
+	  name: body.name,
+	  number: body.number,
+	}
+
+	persons = persons.concat(person)
+
+	response.json(person)
   })
 
   const PORT = 3001
