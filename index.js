@@ -26,10 +26,12 @@ let persons = [
 
   app.use(express.json())
 
+  // Get home page
   app.get('/', (request, response) => {
 	response.send('<h1>Hello World!</h1>')
   })
 
+  // Get persons
   app.get('/api/persons', (request, response) => {
 	response.json(persons)
   })
@@ -69,11 +71,16 @@ let persons = [
 
   app.post('/api/persons', (request, response) => {
 	const body = request.body
+	const names = persons.map(name => name.name.toLowerCase())
 
-	if (!body.name) {
+	if (!body.name || !body.number) {
 	  return response.status(400).json({
-		error: 'content missing'
+		error: 'Name or phone number missing'
 	  })
+	} else if (names.includes(body.name.toLowerCase())) {
+		return response.status(400).json({
+			error: 'Name must be unique'
+		})
 	}
 
 	const person = {
