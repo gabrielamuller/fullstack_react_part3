@@ -68,6 +68,7 @@ app.post('/api/persons', (request, response) => {
 	})
 })
 
+// Update person
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
 
