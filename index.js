@@ -36,21 +36,17 @@ app.get('/info', (request, response) => {
 
 // Single person
 app.get('/api/persons/:id', (request, response) => {
-	const id = Number(request.params.id)
-	const person = persons.find(person => person.id === id)
-
-	if (person) {
-		response.json(person)
-		} else {
-		response.status(404).end()
-	}
+  Person.findById(request.params.id).then(person => {
+    response.json(person)
+  })
 })
 
 // Delete persons
 app.delete('/api/persons/:id', (request, response) => {
-	Person.findById(request.params.id).then(person => {
-		response.json(person)
-	})
+	const id = Number(request.params.id)
+	persons = persons.filter(person => person.id !== id)
+
+	response.status(204).end()
 })
 
 // Add persons
@@ -59,17 +55,17 @@ app.post('/api/persons', (request, response) => {
 
 	if (body.name === undefined) {
 		return response.status(400).json({ error: 'content missing' })
-	  }
+	}
 
 	const person = new Person({
 		name: body.name,
 		number: body.number,
-	  })
+	})
 
 	person.save().then(savedPerson => {
 		response.json(savedPerson)
 	})
-  })
+})
 
   const PORT = process.env.PORT
   app.listen(PORT, () => {
