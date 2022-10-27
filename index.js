@@ -16,7 +16,7 @@ app.use(express.static('build'))
 
 // Get home page
 app.get('/', (request, response) => {
-	response.send('<h1>Hello World!</h1>')
+  response.send('<h1>Hello World!</h1>')
 })
 
 // Get persons
@@ -28,29 +28,29 @@ app.get('/api/persons', (request, response) => {
 
 // Info page
 app.get('/info', (request, response) => {
-	Person.find({}).then(persons => {
-		response.send(
-			`<p>Phonebook has info for  ${persons.length}  people </p>
+  Person.find({}).then(persons => {
+    response.send(
+      `<p>Phonebook has info for  ${persons.length}  people </p>
 			<p> ${new Date().toString()} </p>`
-		)
-	})
+    )
+  })
 })
 
 // Single person
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
-	.then(person => {
-		if (person) {
-			response.json(person)
-		} else response.status(404).end()
-  })
-	.catch(error => next(error))
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else response.status(404).end()
+    })
+    .catch(error => next(error))
 })
 
 // Delete persons
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
@@ -58,12 +58,12 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 // Add persons
 app.post('/api/persons', (request, response, next) => {
-	const body = request.body
+  const body = request.body
 
-	const person = new Person({
-		name: body.name,
-		number: body.number,
-	})
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  })
 
   person.save()
     .then(savedPerson => {
@@ -104,7 +104,7 @@ const errorHandler = (error, request, response, next) => {
 // this has to be the last loaded middleware.
 app.use(errorHandler)
 
-  const PORT = process.env.PORT
-  app.listen(PORT, () => {
-		console.log(`Server running on port ${PORT}`)
-  })
+const PORT = process.env.PORT
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})

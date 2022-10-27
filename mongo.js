@@ -21,22 +21,22 @@ const Person = mongoose.model('Person', personSchema)
 mongoose
   .connect(url)
 
-  const person = new Person({
-	name: name,
-	number: number,
-  })
+const person = new Person({
+  name: name,
+  number: number,
+})
 
-  if (process.argv.length === 5) {
-	person.save().then(result => {
-		console.log(`added ${name} number ${number} to phonebook`)
-		mongoose.connection.close()
-	  })
-  } else {
-	Person.find({}).then(result => {
-		console.log('phonebook:')
-		result.forEach(person => {
-		  console.log(person)
-		})
-		mongoose.connection.close()
-	  })
-  }
+if (process.argv.length === 5) {
+  person.save().then(() => {
+    console.log(`added ${name} number ${number} to phonebook`)
+    mongoose.connection.close()
+  })
+} else {
+  Person.find({}).then(result => {
+    console.log('phonebook:')
+    result.forEach(person => {
+      console.log(person)
+    })
+    mongoose.connection.close()
+  })
+}
